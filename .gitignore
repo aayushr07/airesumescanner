@@ -34,3 +34,15 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+venv/
+__pycache__/
+
+# Ignore environment variables
+.env
+
+# Ignore compiled files
+*.pyc
+
+# Ignore Flask/SQL files
+*.sqlite3
