@@ -1,7 +1,4 @@
 import spacy.cli
-spacy.cli.download("en_core_web_sm")
-
-
 import re
 import spacy
 import PyPDF2
@@ -87,7 +84,7 @@ def calculate_experience_match(resume_text: str) -> float:
 
 def calculate_education_match(resume_text: str) -> float:
     """Calculate education match based on degree mentioned in resume."""
-    education_keywords = ["bachelor", "master", "phd", "degree", "diploma"]
+    education_keywords = ["bachelor", "master", "phd", "degree", "diploma","B.E"]
     degree_found = False
     
     # Check if resume contains any of the predefined education keywords
