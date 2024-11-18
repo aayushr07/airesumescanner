@@ -1,10 +1,12 @@
 import spacy.cli
+spacy.cli.download('en_core_web_sm')
+
 import re
 import spacy
 import PyPDF2
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple  
 
 # Load spaCy NLP model once
 nlp = spacy.load('en_core_web_sm')
