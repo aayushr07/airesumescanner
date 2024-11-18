@@ -25,7 +25,7 @@ export default function Body() {
           Enhance your job search with our advanced AI resume scanner. Get valuable insights to make your resume stand out.
         </p>
         <p className="text-lg mb-12 max-w-3xl mx-auto animation-fadeIn">
-          Our AI scanner provides detailed feedback on your resume's content and formatting, helping you tailor it to job descriptions and industry standards.
+          Our AI scanner provides detailed feedback on your resumes content and formatting, helping you tailor it to job descriptions and industry standards.
         </p>
       </section>
 
@@ -39,6 +39,7 @@ export default function Body() {
         </p>
         <a
           href="/form"
+          onClick={handleUploadClick}
           className={`bg-gray-800 hover:bg-gray-700 text-white font-semibold py-3 px-6 rounded-lg shadow-lg transition-transform transform ${
             isUploading ? 'animate-bounce' : ''
           }`}
