@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
@@ -11,11 +11,17 @@ const ResultPage = () => {
     const data = JSON.parse(localStorage.getItem('resultData'));
     if (data) {
       setResult(data);
+    } else {
+      setResult({ error: 'No result data found in localStorage' });
     }
   }, []);
 
   if (!result) {
     return <div className="min-h-screen flex items-center justify-center text-white">Loading...</div>;
+  }
+
+  if (result.error) {
+    return <div className="min-h-screen flex items-center justify-center text-white">{result.error}</div>;
   }
 
   const { skills_match, experience_match, education_match, overall_percentage, skills, recommendations } = result;
