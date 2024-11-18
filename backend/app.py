@@ -17,6 +17,3 @@ def upload_resume():
 
     result = trial.process_resume(file)
     return jsonify(result)
-
-if __name__ == '__main__':
-    app.run(debug=True)
