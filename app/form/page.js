@@ -27,7 +27,7 @@ export default function FormPage() {
     formData.append('resume', file);
 
     try {
-      const res = await fetch('http://127.0.0.1:5000/upload', {
+      const res = await fetch('https://airesumescanner-3.onrender.com/upload', {
         method: 'POST',
         body: formData,
       });
