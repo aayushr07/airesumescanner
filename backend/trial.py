@@ -139,18 +139,44 @@ def process_resume(file_stream) -> Dict:
     {"title": "Project Manager", "skills": ["agile", "scrum", "jira", "project management", "kanban", "risk management"]},
     {"title": "UX/UI Designer", "skills": ["figma", "adobe xd", "wireframing", "prototyping", "html", "css", "javascript"]},
     {"title": "SEO Specialist", "skills": ["seo", "google analytics", "html", "css", "wordpress", "content marketing"]},
-    {"title": "Technical Support Engineer", "skills": ["linux", "windows", "network troubleshooting", "python", "bash scripting"]}
+    {"title": "Content Writer", "skills": ["writing", "copywriting", "seo", "content creation", "blogging", "editing"]},
+    {"title": "Data Engineer", "skills": ["python", "sql", "apache spark", "hadoop", "etl", "data warehousing"]},
+    {"title": "Data Analyst", "skills": ["excel", "sql", "tableau", "power bi", "python", "data visualization"]},
+    {"title": "QA Engineer", "skills": ["selenium", "jira", "python", "automation", "cucumber", "testng"]},
+    {"title": "Network Security Engineer", "skills": ["firewalls", "vpn", "linux", "windows", "tcp/ip", "encryption"]},
+    {"title": "Mobile Security Engineer", "skills": ["ios security", "android security", "reverse engineering", "penetration testing"]},
+    {"title": "Robotics Engineer", "skills": ["python", "robotics", "ros", "automation", "c++", "sensors"]},
+    {"title": "Cloud Engineer", "skills": ["aws", "azure", "gcp", "terraform", "cloud networking", "kubernetes"]},
+    {"title": "Salesforce Developer", "skills": ["salesforce", "apex", "visualforce", "soql", "javascript"]},
+    {"title": "Embedded Systems Engineer", "skills": ["c", "c++", "python", "rtos", "embedded linux", "microcontrollers"]},
+    {"title": "Digital Marketing Specialist", "skills": ["seo", "google ads", "facebook ads", "content marketing", "analytics"]},
+    {"title": "Growth Hacker", "skills": ["seo", "social media", "content marketing", "analytics", "growth strategies"]},
+    {"title": "Operations Manager", "skills": ["project management", "logistics", "operations", "analytics", "excel"]},
 ]
+
+
     
-    job_recommendations = recommend_jobs(skills, job_database)
+    # Sample job description to compare against
+    job_description = "Looking for a data scientist with experience in Python, NLP, and machine learning."
+    
+    # Calculate similarity between resume and job description
+    rankings = rank_resumes_with_embeddings([resume_text], job_description)
+    ranking_percentage = rankings[0] * 100
+
+    # Extract matches for skills, experience, and education
+    skills_match = ranking_percentage
     experience_match = calculate_experience_match(resume_text)
     education_match = calculate_education_match(resume_text)
 
-    # Return the final result as a dictionary
+    # Recommend jobs based on extracted skills
+    recommendations = recommend_jobs(skills, job_database)
+
     return {
-        "skills": skills,
-        "job_recommendations": job_recommendations,
-        "experience_match": experience_match,
-        "education_match": education_match
+        'skills_match': skills_match,
+        'experience_match': experience_match,
+        'education_match': education_match,
+        'overall_percentage': ranking_percentage,
+        'recommendations': recommendations,
+        'skills': skills
     }
 
