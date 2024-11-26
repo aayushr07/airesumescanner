@@ -25,16 +25,33 @@ def extract_text_from_pdf(file_stream) -> str:
         return ""
 
 def extract_skills(text: str) -> List[str]:
-    """Extract skills from resume text using NLP."""
+    """Extract skills from resume text using NLP and predefined skills."""
+    # Predefined skills set
+    predefined_skills = {
+        "python", "machine learning", "nlp", "pandas", 
+        "html", "css", "javascript", "react", 
+        "aws", "docker", "kubernetes", "ci/cd", 
+        "tensorflow", "pytorch", "sql", "node.js"
+    }
+
+    # Normalize and preprocess text
+    text = text.lower().replace("\n", " ").strip()
+
+    # Process with spaCy
     doc = nlp(text)
     skills = set()
-    predefined_skills = {"python", "machine learning", "nlp", "pandas", 
-                         "html", "css", "javascript", "react", 
-                         "aws", "docker", "kubernetes", "ci/cd"}
 
+    # Extract skills from entities
     for ent in doc.ents:
-        if ent.label_ in ["ORG", "PRODUCT"] or ent.text.lower() in predefined_skills:
+        if ent.label_ in ["ORG", "PRODUCT", "SKILL"] or ent.text.lower() in predefined_skills:
             skills.add(ent.text.lower())
+
+    # Fallback to noun phrase matching
+    for chunk in doc.noun_chunks:
+        if chunk.text.lower() in predefined_skills:
+            skills.add(chunk.text.lower())
+
+    # Return unique skills
     return list(skills)
 
 def rank_resumes_with_embeddings(resume_texts: List[str], job_description: str) -> List[float]:
@@ -57,34 +74,24 @@ def recommend_jobs(resume_skills: List[str], job_database: List[Dict]) -> List[T
     return sorted(recommendations, key=lambda x: x[1], reverse=True)
 
 def calculate_experience_match(resume_text: str) -> float:
-    """
-    Extracts the number of years of experience from the resume text.
-    Compares it to a predefined experience requirement and returns a match percentage.
-    """
-    # Look for date patterns (e.g., "Jan 2019 - Dec 2022")
+    """Calculate experience match based on years of experience in resume."""
+    # Match years like "2018-2021" or "Jan 2018 - Dec 2021"
     date_pattern = re.compile(r"(\b\d{4}\b)")
-    experience_years = []
+    dates = date_pattern.findall(resume_text)
     
-    # Split resume text into lines and process
-    for line in resume_text.splitlines():
-        if "experience" in line.lower():  # Check for keywords indicating experience section
-            dates = date_pattern.findall(line)
-            if len(dates) >= 2:  # Assuming at least two dates indicate a date range
-                start_year = int(dates[0])
-                end_year = int(dates[-1])
-                experience_years.append(end_year - start_year)
-    
-    # Sum up all experience years
-    total_experience = sum(experience_years) if experience_years else 0
-    
-    # Set a predefined requirement (for example, 5 years of experience)
-    required_experience = 1
-    
-    # Calculate match percentage
+    if len(dates) >= 2:
+        start_year = int(dates[0])
+        end_year = int(dates[-1])
+        total_experience = end_year - start_year
+    else:
+        total_experience = 0
+
+    # Set required experience (e.g., 5 years)
+    required_experience = 5
     experience_match = min((total_experience / required_experience) * 100, 100)
     
     return experience_match
-
+    
 def calculate_education_match(resume_text: str) -> float:
     """Calculate education match based on degree mentioned in resume."""
     education_keywords = ["bachelor", "master", "phd", "degree", "diploma","B.E"]
