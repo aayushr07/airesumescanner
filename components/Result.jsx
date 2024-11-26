@@ -1,30 +1,47 @@
-"use client"
-import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
 
 const ResultPage = () => {
   const [result, setResult] = useState(null);
 
   useEffect(() => {
-    const data = JSON.parse(localStorage.getItem('resultData'));
+    const data = JSON.parse(localStorage.getItem("resultData"));
+    console.log("Fetched result data:", data); // Debugging
     if (data) {
       setResult(data);
     } else {
-      setResult({ error: 'No result data found in localStorage' });
+      setResult({ error: "No result data found in localStorage" });
     }
   }, []);
 
   if (!result) {
-    return <div className="min-h-screen flex items-center justify-center text-white">Loading...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center text-white">
+        Loading...
+      </div>
+    );
   }
 
   if (result.error) {
-    return <div className="min-h-screen flex items-center justify-center text-white">{result.error}</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center text-white">
+        {result.error}
+      </div>
+    );
   }
 
-  const { skills_match, experience_match, education_match, overall_percentage, skills, recommendations } = result;
+  const {
+    skills_match = 0,
+    experience_match = 0,
+    education_match = 0,
+    overall_percentage = 0,
+    skills = [],
+    recommendations = [],
+  } = result;
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-white p-6 space-y-6">
@@ -41,9 +58,9 @@ const ResultPage = () => {
           value={overall_percentage}
           text={`${Math.round(overall_percentage)}%`}
           styles={buildStyles({
-            textColor: '#fff',
-            pathColor: '#00e676',
-            trailColor: '#d6d6d6',
+            textColor: "#fff",
+            pathColor: "#00e676",
+            trailColor: "#d6d6d6",
           })}
         />
       </motion.div>
@@ -61,9 +78,9 @@ const ResultPage = () => {
             value={skills_match}
             text={`${Math.round(skills_match)}%`}
             styles={buildStyles({
-              textColor: '#fff',
-              pathColor: '#03a9f4',
-              trailColor: '#d6d6d6',
+              textColor: "#fff",
+              pathColor: "#03a9f4",
+              trailColor: "#d6d6d6",
             })}
           />
         </motion.div>
@@ -79,9 +96,9 @@ const ResultPage = () => {
             value={experience_match}
             text={`${Math.round(experience_match)}%`}
             styles={buildStyles({
-              textColor: '#fff',
-              pathColor: '#ff9800',
-              trailColor: '#d6d6d6',
+              textColor: "#fff",
+              pathColor: "#ff9800",
+              trailColor: "#d6d6d6",
             })}
           />
         </motion.div>
@@ -97,9 +114,9 @@ const ResultPage = () => {
             value={education_match}
             text={`${Math.round(education_match)}%`}
             styles={buildStyles({
-              textColor: '#fff',
-              pathColor: '#f44336',
-              trailColor: '#d6d6d6',
+              textColor: "#fff",
+              pathColor: "#f44336",
+              trailColor: "#d6d6d6",
             })}
           />
         </motion.div>
@@ -108,37 +125,47 @@ const ResultPage = () => {
       {/* Skills List */}
       <div className="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-3xl">
         <h3 className="text-2xl font-semibold mb-4">Extracted Skills</h3>
-        <div className="grid grid-cols-2 gap-2">
-          {skills.map((skill, index) => (
-            <motion.div
-              key={index}
-              className="bg-gray-700 px-4 py-2 rounded-lg text-center"
-              initial={{ y: 10, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: index * 0.1 }}
-            >
-              {skill}
-            </motion.div>
-          ))}
-        </div>
+        {skills.length > 0 ? (
+          <div className="grid grid-cols-2 gap-2">
+            {skills.map((skill, index) => (
+              <motion.div
+                key={index}
+                className="bg-gray-700 px-4 py-2 rounded-lg text-center"
+                initial={{ y: 10, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: index * 0.1 }}
+              >
+                {skill}
+              </motion.div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-center text-gray-400">No skills available</p>
+        )}
       </div>
 
       {/* Job Recommendations */}
       <div className="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-3xl">
         <h3 className="text-2xl font-semibold mb-4">Recommended Jobs</h3>
-        <ul className="space-y-2">
-          {recommendations.map((job, index) => (
-            <motion.li
-              key={index}
-              className="bg-gray-700 px-4 py-2 rounded-lg"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: index * 0.1 }}
-            >
-              {job[0]} - Match: {Math.round(job[1] * 100)}%
-            </motion.li>
-          ))}
-        </ul>
+        {recommendations.length > 0 ? (
+          <ul className="space-y-2">
+            {recommendations.map((job, index) => (
+              <motion.li
+                key={index}
+                className="bg-gray-700 px-4 py-2 rounded-lg"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: index * 0.1 }}
+              >
+                {job[0]} - Match: {Math.round(job[1] * 100)}%
+              </motion.li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-center text-gray-400">
+            No job recommendations available
+          </p>
+        )}
       </div>
     </div>
   );
